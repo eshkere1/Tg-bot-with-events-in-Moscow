@@ -14,7 +14,9 @@ def get_name_url_events(url, response):
             url_events.append(urljoin(url, tag["href"]))
             name_events.append(tag.text)
 
-    return url_events, name_events
+
+    return url_events[0:5], name_events[0:5]
+
 
 def get_all_events(urls):
     pass
@@ -27,6 +29,8 @@ def main():
 
     url_events, name_events = get_name_url_events(url_site, response)
     get_all_events(url_events)
+    print(url_events)
+    print(name_events)
 
 
 if "__main__" == __name__:
