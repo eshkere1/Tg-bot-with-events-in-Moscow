@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
 
-def get_name_events(response):
+def get_name_url_events(url, response):
     name_events = []
     url_events = []
     soup = BeautifulSoup(response.text, "lxml")
@@ -10,10 +11,13 @@ def get_name_events(response):
 
     for tag in tags_name_events:
         if tag["href"] != "/selection/":
-            url_events.append(tag["href"])
+            url_events.append(urljoin(url, tag["href"]))
             name_events.append(tag.text)
 
     return url_events, name_events
+
+def get_all_events(urls):
+    pass
 
 
 def main():
@@ -21,10 +25,8 @@ def main():
     response = requests.get(url_site)
     response.raise_for_status()
 
-    url_events, name_events = get_name_events(response)
-
-    print(url_events)
-    print(name_events)
+    url_events, name_events = get_name_url_events(url_site, response)
+    get_all_events(url_events)
 
 
 if "__main__" == __name__:
