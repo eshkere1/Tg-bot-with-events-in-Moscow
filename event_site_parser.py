@@ -1,10 +1,11 @@
-import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-import time
+import requests
+
 import datetime
-import os
 import json
+import time
+import os
 
 
 def get_name_url_events(url, response):
