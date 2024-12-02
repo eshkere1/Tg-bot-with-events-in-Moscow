@@ -13,6 +13,10 @@ def handle_start(message):
         "Привет, {0.first_name}! Это наш бот, для получения информации об отдыхе в Москве, самых лучших праздниках и встречах!".format(message.from_user),
         reply_markup=keyboard_start
     )
+    keyboard_choose = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+    search_btn1 = types.KeyboardButton("Поиск мероприятий по датам🔍")
+    search_btn2 = types.KeyboardButton("Поиск погоды по датам 🌧")
+    keyboard_choose.add(search_btn1).row(search_btn2)
     bot.send_message(message.chat.id, "Выберите интересующую вас информацию:", reply_markup=keyboard_choose)
 
 
@@ -30,11 +34,6 @@ def event_type_search(message):
     date_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
     date_keyboard.add(btn_date[0], btn_date[1], btn_date[2], btn_date[3], btn_date[4], btn_date[5], btn_date[6],
                       btn_date[7], btn_date[8], btn_date[9]).row()
-
-    keyboard_choose = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-    search_btn1 = types.KeyboardButton("Поиск мероприятий по датам🔍")
-    search_btn2 = types.KeyboardButton("Поиск погоды по датам 🌧")
-    keyboard_choose.add(search_btn1).row(search_btn2)
 
     if message.text == "Поиск мероприятий по датам🔍":  # поиск по типам мероприятий
         event_types_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
