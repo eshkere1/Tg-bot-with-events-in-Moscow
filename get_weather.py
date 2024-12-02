@@ -11,9 +11,9 @@ def get_weather_report(date_input):
     data = Daily(location, date, date).fetch()
     if data.empty:
         return "Данные о погоде не найдены для указанного местоположения и даты."
-    min_temp = data['tmin'].iloc[0]
-    max_temp = data['tmax'].iloc[0]
-    precipitation = data['prcp'].iloc[0]
+    min_temp = data["tmin"].iloc[0]
+    max_temp = data["tmax"].iloc[0]
+    precipitation = data["prcp"].iloc[0]
     result = f"Минимальная температура: {min_temp} °C\n"
     result += f"Максимальная температура: {max_temp} °C\n"
     if np.isnan(precipitation):
@@ -22,4 +22,3 @@ def get_weather_report(date_input):
         result += f"Осадки: {precipitation} мм"
 
     return result
-

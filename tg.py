@@ -5,23 +5,29 @@ from date_maker import date_maker
 import json
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=["start"])
 def handle_start(message):
     global keyboard_choose
     keyboard_start = types.InlineKeyboardMarkup()
     bot.send_message(
         message.chat.id,
-        "Привет, {0.first_name}! Это наш бот, для получения информации об отдыхе в Москве, самых лучших праздниках и встречах!".format(message.from_user),
-        reply_markup=keyboard_start
+        "Привет, {0.first_name}! Это наш бот, для получения информации об отдыхе в Москве, самых лучших праздниках и встречах!".format(
+            message.from_user
+        ),
+        reply_markup=keyboard_start,
     )
     keyboard_choose = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
     search_btn1 = types.KeyboardButton("Поиск мероприятий по датам🔍")
     search_btn2 = types.KeyboardButton("Поиск погоды по датам 🌧")
     keyboard_choose.add(search_btn1).row(search_btn2)
-    bot.send_message(message.chat.id, "Выберите интересующую вас информацию:", reply_markup=keyboard_choose)
+    bot.send_message(
+        message.chat.id,
+        "Выберите интересующую вас информацию:",
+        reply_markup=keyboard_choose,
+    )
 
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(content_types=["text"])
 def event_type_search(message):
     global date_keyboard
     global event_types_keyboard
@@ -32,19 +38,41 @@ def event_type_search(message):
         counter += 1
         btn_date.append(types.KeyboardButton(day))
     date_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-    date_keyboard.add(btn_date[0], btn_date[1], btn_date[2], btn_date[3], btn_date[4], btn_date[5], btn_date[6],
-                      btn_date[7], btn_date[8], btn_date[9]).row()
+    date_keyboard.add(
+        btn_date[0],
+        btn_date[1],
+        btn_date[2],
+        btn_date[3],
+        btn_date[4],
+        btn_date[5],
+        btn_date[6],
+        btn_date[7],
+        btn_date[8],
+        btn_date[9],
+    ).row()
 
     if message.text == "Поиск мероприятий по датам🔍":  # поиск по типам мероприятий
-        event_types_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-        event_types_keyboard.add("Кино🍿").row(types.KeyboardButton("Театр🥻"),
-                                                 types.KeyboardButton("Елки👦"),
-                                                 types.KeyboardButton("Концерты🥳"),
-                                                 types.KeyboardButton("Стендап🤭"))
-        bot.send_message(message.chat.id, "Выберите тип мероприятия:", reply_markup=event_types_keyboard)
+        event_types_keyboard = types.ReplyKeyboardMarkup(
+            resize_keyboard=True, row_width=1
+        )
+        event_types_keyboard.add("Кино🍿").row(
+            types.KeyboardButton("Театр🥻"),
+            types.KeyboardButton("Елки👦"),
+            types.KeyboardButton("Концерты🥳"),
+            types.KeyboardButton("Стендап🤭"),
+        )
+        bot.send_message(
+            message.chat.id,
+            "Выберите тип мероприятия:",
+            reply_markup=event_types_keyboard,
+        )
         bot.register_next_step_handler(message, event_date_search)
     elif message.text == "Поиск погоды по датам 🌧":  # поиск погоды
-        bot.send_message(message.chat.id, "Выберите дату на которую вы хотите узнать погоду", reply_markup=date_keyboard)
+        bot.send_message(
+            message.chat.id,
+            "Выберите дату на которую вы хотите узнать погоду",
+            reply_markup=date_keyboard,
+        )
         bot.register_next_step_handler(message, report_message)
     else:
         bot.send_message(message.chat.id, text="На такое я не запрограммирован :(")
@@ -52,10 +80,15 @@ def event_type_search(message):
 
 def report_message(message):
     try:
-        bot.send_message(message.chat.id, get_weather_report(message), reply_markup=keyboard_choose)
+        bot.send_message(
+            message.chat.id, get_weather_report(message), reply_markup=keyboard_choose
+        )
     except ValueError:
-        bot.send_message(message.chat.id, "Вы неверно ввели дату, попробуйте снова с помощью кнопки",
-                         reply_markup=date_keyboard)
+        bot.send_message(
+            message.chat.id,
+            "Вы неверно ввели дату, попробуйте снова с помощью кнопки",
+            reply_markup=date_keyboard,
+        )
         bot.register_next_step_handler(message, report_message)
 
 
@@ -70,17 +103,32 @@ def event_reader(date):
                     break
             event_list_length = len(json_file[select_day]["prices"])
             if event_list_length == 0:
-                bot.send_message(date.chat.id, "Нет событий на этот день", reply_markup=keyboard_choose)
+                bot.send_message(
+                    date.chat.id,
+                    "Нет событий на этот день",
+                    reply_markup=keyboard_choose,
+                )
             else:
-                for i in range(event_list_length-1):
+                for i in range(event_list_length - 1):
                     if json_file[select_day]["prices"][i] != "Билеты":
                         price = f"Цена: {json_file[select_day]["prices"][i]}\n"
                     else:
                         price = f"Билеты есть"
-                    bot.send_message(date.chat.id, f"Название: {json_file[select_day]["names"][i]}\n{price}Ссылка: {json_file[select_day]["urls"][i]}")
-                bot.send_message(date.chat.id, f"Название: {json_file[select_day]["names"][event_list_length-1]}\nЦена: {json_file[select_day]["prices"][event_list_length-1]}\nСсылка: {json_file[select_day]["urls"][event_list_length-1]}", reply_markup=keyboard_choose)
+                    bot.send_message(
+                        date.chat.id,
+                        f"Название: {json_file[select_day]["names"][i]}\n{price}Ссылка: {json_file[select_day]["urls"][i]}",
+                    )
+                bot.send_message(
+                    date.chat.id,
+                    f"Название: {json_file[select_day]["names"][event_list_length-1]}\nЦена: {json_file[select_day]["prices"][event_list_length-1]}\nСсылка: {json_file[select_day]["urls"][event_list_length-1]}",
+                    reply_markup=keyboard_choose,
+                )
     except ValueError:
-        bot.send_message(date.chat.id, "Вы неверно ввели дату, попробуйте снова с помощью кнопки", reply_markup=date_keyboard)
+        bot.send_message(
+            date.chat.id,
+            "Вы неверно ввели дату, попробуйте снова с помощью кнопки",
+            reply_markup=date_keyboard,
+        )
         bot.register_next_step_handler(date, event_reader)
 
 
@@ -97,7 +145,11 @@ def event_date_search(message):
     elif message.text == "Стендап🤭":
         file = "JSON/standup.json"
     else:
-        bot.send_message(message.chat.id, "Вы неверно ввели тип мероприятия, выберите его с помощью кнопки", reply_markup=event_types_keyboard)
+        bot.send_message(
+            message.chat.id,
+            "Вы неверно ввели тип мероприятия, выберите его с помощью кнопки",
+            reply_markup=event_types_keyboard,
+        )
         bot.register_next_step_handler(message, event_date_search)
     if file != "":
         bot.send_message(message.chat.id, "Выберите дату:", reply_markup=date_keyboard)
