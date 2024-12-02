@@ -7,6 +7,7 @@ import json
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
+    global keyboard_choose
     keyboard_start = types.InlineKeyboardMarkup()
     bot.send_message(
         message.chat.id,
@@ -22,7 +23,6 @@ def handle_start(message):
 
 @bot.message_handler(content_types=['text'])
 def event_type_search(message):
-    global keyboard_choose
     global date_keyboard
     global event_types_keyboard
     btn_date = []
