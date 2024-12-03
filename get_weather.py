@@ -6,10 +6,7 @@ import numpy as np
 def get_weather_report(date_input):
     latitude = 55.7522
     longitude = 37.6156
-    try:
-        date = datetime.strptime(date_input, "%Y-%m-%d")
-    except ValueError:
-        return "Неверный формат даты. Используйте формат ГГГГ-ММ-ДД."
+    date = datetime.strptime(date_input.text, "%Y-%m-%d")
     location = Point(latitude, longitude)
     data = Daily(location, date, date).fetch()
     if data.empty:
@@ -25,9 +22,3 @@ def get_weather_report(date_input):
         result += f"Осадки: {precipitation} мм"
 
     return result
-
-
-if __name__ == "__main__":
-    date_input = "2024-11-30"  # Пример даты
-    report = get_weather_report(date_input)
-    print(report)
